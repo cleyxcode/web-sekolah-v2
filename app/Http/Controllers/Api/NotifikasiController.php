@@ -3,61 +3,37 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notifikasi;
+use App\Services\NotifikasiService;
 use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
-    /**
-     * GET /api/v1/notifikasi
-     * Daftar notifikasi milik user yang sedang login, terbaru di atas.
-     */
+    public function __construct(private NotifikasiService $service) {}
+
     public function index(Request $request)
     {
-        $notifikasi = Notifikasi::where('user_id', $request->user()->id)
-            ->latest()
-            ->paginate(20);
-
-        return response()->json($notifikasi);
+        return response()->json(
+            $this->service->getAll($request->user()->id)
+        );
     }
 
-    /**
-     * GET /api/v1/notifikasi/unread-count
-     * Jumlah notifikasi yang belum dibaca (untuk badge di icon notifikasi).
-     */
     public function unreadCount(Request $request)
     {
-        $count = Notifikasi::where('user_id', $request->user()->id)
-            ->where('dibaca', false)
-            ->count();
-
-        return response()->json(['unread' => $count]);
+        return response()->json([
+            'unread' => $this->service->countUnread($request->user()->id),
+        ]);
     }
 
-    /**
-     * PATCH /api/v1/notifikasi/{id}/baca
-     * Tandai satu notifikasi sebagai sudah dibaca.
-     */
     public function baca(Request $request, $id)
     {
-        $notifikasi = Notifikasi::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
-
-        $notifikasi->update(['dibaca' => true]);
+        $this->service->markAsRead($id, $request->user()->id);
 
         return response()->json(['message' => 'Notifikasi ditandai sudah dibaca.']);
     }
 
-    /**
-     * PATCH /api/v1/notifikasi/baca-semua
-     * Tandai semua notifikasi sebagai sudah dibaca.
-     */
     public function bacaSemua(Request $request)
     {
-        Notifikasi::where('user_id', $request->user()->id)
-            ->where('dibaca', false)
-            ->update(['dibaca' => true]);
+        $this->service->markAllAsRead($request->user()->id);
 
         return response()->json(['message' => 'Semua notifikasi ditandai sudah dibaca.']);
     }

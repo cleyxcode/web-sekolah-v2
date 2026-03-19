@@ -13,6 +13,7 @@ use App\Repositories\Contracts\ProfilSekolahRepositoryInterface;
 use App\Repositories\Contracts\BannerRepositoryInterface;
 use App\Repositories\Contracts\InfoPendaftaranRepositoryInterface;
 use App\Repositories\Contracts\PendaftaranRepositoryInterface;
+use App\Repositories\Contracts\NotifikasiRepositoryInterface;
 
 // Eloquent Implementations
 use App\Repositories\Eloquent\UserRepository;
@@ -23,6 +24,7 @@ use App\Repositories\Eloquent\ProfilSekolahRepository;
 use App\Repositories\Eloquent\BannerRepository;
 use App\Repositories\Eloquent\InfoPendaftaranRepository;
 use App\Repositories\Eloquent\PendaftaranRepository;
+use App\Repositories\Eloquent\NotifikasiRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -36,5 +38,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BannerRepositoryInterface::class,         BannerRepository::class);
         $this->app->bind(InfoPendaftaranRepositoryInterface::class, InfoPendaftaranRepository::class);
         $this->app->bind(PendaftaranRepositoryInterface::class,    PendaftaranRepository::class);
+        $this->app->bind(NotifikasiRepositoryInterface::class,     NotifikasiRepository::class);
     }
 }
