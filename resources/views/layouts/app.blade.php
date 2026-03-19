@@ -44,6 +44,7 @@
             ['route' => 'berita',     'label' => 'Berita',      'match' => 'berita*'],
             ['route' => 'galeri',     'label' => 'Galeri',      'match' => 'galeri'],
             ['route' => 'pendaftaran','label' => 'Pendaftaran', 'match' => 'pendaftaran*'],
+            ['route' => 'aplikasi',   'label' => 'Download App','match' => 'aplikasi*'],
         ];
     @endphp
 

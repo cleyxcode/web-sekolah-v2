@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Aplikasi;
 use App\Models\Berita;
 use App\Models\Guru;
 use App\Models\Pendaftaran;
@@ -29,6 +30,11 @@ class StatsOverviewWidget extends BaseWidget
             Stat::make('Berita Tayang', Berita::where('status', 'publish')->count())
                 ->icon('heroicon-o-newspaper')
                 ->color('primary'),
+
+            Stat::make('Aplikasi Android', Aplikasi::where('status', 'aktif')->count())
+                ->icon('heroicon-o-device-phone-mobile')
+                ->color('danger')
+                ->description('Versi aktif tersedia'),
         ];
     }
 }

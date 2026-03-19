@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AplikasiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\BeritaController;
@@ -37,6 +38,10 @@ Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
 Route::get('/pendaftaran', [PendaftaranPublikController::class, 'index'])->name('pendaftaran');
 Route::post('/pendaftaran', [PendaftaranPublikController::class, 'store'])->name('pendaftaran.store');
 Route::get('/pendaftaran/sukses', [PendaftaranPublikController::class, 'sukses'])->name('pendaftaran.sukses');
+
+// Download Aplikasi
+Route::get('/download-aplikasi', [AplikasiController::class, 'index'])->name('aplikasi');
+Route::get('/download-aplikasi/{id}', [AplikasiController::class, 'download'])->name('aplikasi.download');
 
 // Auth Publik (Orang Tua)
 Route::middleware('guest')->group(function () {
