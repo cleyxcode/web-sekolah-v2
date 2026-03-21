@@ -54,7 +54,7 @@
             @endif
         </div>
     @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger">
             @foreach($beritas as $berita)
                 @php
                     $badgeColor = match(strtolower($berita->kategori ?? '')) {
@@ -65,7 +65,7 @@
                         default        => 'bg-primary/90',
                     };
                 @endphp
-                <article class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col border border-slate-100 dark:border-slate-800">
+                <article class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm card-lift flex flex-col border border-slate-100 dark:border-slate-800 reveal">
                     {{-- Gambar --}}
                     <div class="relative h-48 w-full overflow-hidden">
                         @if($berita->gambar)

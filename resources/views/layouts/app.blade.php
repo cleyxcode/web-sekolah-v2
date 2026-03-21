@@ -27,6 +27,45 @@
             },
         }
     </script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+/* ── Page entrance ── */
+@keyframes pageIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+main { animation: pageIn .45s ease both; }
+
+/* ── Global reveal / stagger ── */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-left { opacity:0; transform:translateX(-32px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+.reveal-left.visible { opacity:1; transform:translateX(0); }
+.reveal-right { opacity:0; transform:translateX(32px); transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+.reveal-right.visible { opacity:1; transform:translateX(0); }
+.stagger > *:nth-child(1){transition-delay:.05s}
+.stagger > *:nth-child(2){transition-delay:.12s}
+.stagger > *:nth-child(3){transition-delay:.19s}
+.stagger > *:nth-child(4){transition-delay:.26s}
+.stagger > *:nth-child(5){transition-delay:.33s}
+.stagger > *:nth-child(6){transition-delay:.40s}
+.stagger > *:nth-child(7){transition-delay:.47s}
+.stagger > *:nth-child(8){transition-delay:.54s}
+
+/* ── Card lift ── */
+.card-lift { transition:transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease; }
+.card-lift:hover { transform:translateY(-6px) scale(1.01); box-shadow:0 20px 48px rgba(31,59,97,.13); }
+
+/* ── Pulse ring ── */
+@keyframes pulse-ring { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(1.5);opacity:0} }
+.pulse-ring { position:relative; }
+.pulse-ring::before { content:''; position:absolute; inset:-6px; border-radius:9999px; border:2px solid #d4af37; animation:pulse-ring 2s ease-out infinite; }
+
+/* ── Shimmer loading ── */
+@keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+.shimmer { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; }
+
+/* ── Float ── */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.float { animation:float 3.5s ease-in-out infinite; }
+    </style>
     @stack('styles')
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
@@ -366,6 +405,17 @@
     // Auto-hide flash message after 4s
     const flash = document.getElementById('flash-success');
     if (flash) setTimeout(() => flash.remove(), 4000);
+})();
+</script>
+<script>
+// Global Intersection Observer for .reveal, .reveal-left, .reveal-right
+(function(){
+  const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(!els.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin:'0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
 })();
 </script>
 @stack('scripts')

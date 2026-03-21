@@ -2,6 +2,13 @@
 
 @section('title', 'Galeri Kegiatan - ' . ($profil->nama_sekolah ?? 'SD Negeri Warialau'))
 
+@push('styles')
+<style>
+.galeri-item { opacity:0; transform:scale(.92); transition:opacity .5s cubic-bezier(.22,1,.36,1), transform .5s cubic-bezier(.22,1,.36,1); }
+.galeri-item.visible { opacity:1; transform:scale(1); }
+</style>
+@endpush
+
 @section('content')
 
 {{-- Page Header --}}
@@ -22,7 +29,7 @@
         @if($galeri->isNotEmpty())
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach($galeri as $item)
-                    <div class="relative group aspect-square rounded-xl overflow-hidden shadow-md cursor-pointer"
+                    <div class="galeri-item relative group aspect-square rounded-xl overflow-hidden shadow-md cursor-pointer"
                          onclick="openLightbox('{{ asset('storage/' . $item->foto) }}', '{{ addslashes($item->judul) }}', '{{ addslashes($item->keterangan ?? '') }}')">
                         <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                              style="background-image: url('{{ asset('storage/' . $item->foto) }}');"></div>
@@ -74,6 +81,19 @@
 
 @push('scripts')
 <script>
+(function(){
+    const items = document.querySelectorAll('.galeri-item');
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e,i) => {
+            if(e.isIntersecting){
+                setTimeout(()=>e.target.classList.add('visible'), (parseInt(e.target.dataset.idx)||0) % 8 * 80);
+                obs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.05 });
+    items.forEach((el,i) => { el.dataset.idx = i; obs.observe(el); });
+})();
+
 function openLightbox(src, title, caption) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox-title').textContent = title;
