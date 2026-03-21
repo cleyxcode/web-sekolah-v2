@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Berita;
 use App\Models\Notifikasi;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class BeritaObserver
 {
@@ -14,6 +15,11 @@ class BeritaObserver
      */
     public function updated(Berita $berita): void
     {
+        // Invalidasi cache berita saat ada perubahan
+        Cache::forget("berita_{$berita->id}");
+        Cache::forget('berita_latest_5');
+        Cache::forget('berita_latest_3');
+
         if ($berita->wasChanged('status') && $berita->status === 'publish') {
             $orangtua = User::where('role', 'orangtua')->pluck('id');
 
@@ -30,5 +36,18 @@ class BeritaObserver
 
             Notifikasi::insert($notifikasi);
         }
+    }
+
+    public function created(Berita $berita): void
+    {
+        Cache::forget('berita_latest_5');
+        Cache::forget('berita_latest_3');
+    }
+
+    public function deleted(Berita $berita): void
+    {
+        Cache::forget("berita_{$berita->id}");
+        Cache::forget('berita_latest_5');
+        Cache::forget('berita_latest_3');
     }
 }

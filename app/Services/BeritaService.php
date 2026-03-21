@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\BeritaRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class BeritaService
 {
@@ -10,16 +11,18 @@ class BeritaService
 
     public function getAll(int $perPage = 10)
     {
-        return $this->repo->paginate($perPage);
+        // Paginated → cache per page number, TTL pendek agar berita baru cepat muncul
+        $page = request()->get('page', 1);
+        return Cache::remember("berita_page_{$page}_per{$perPage}", now()->addMinutes(10), fn() => $this->repo->paginate($perPage));
     }
 
     public function getById(int $id)
     {
-        return $this->repo->find($id);
+        return Cache::remember("berita_{$id}", now()->addHours(1), fn() => $this->repo->find($id));
     }
 
     public function getLatest(int $limit = 5)
     {
-        return $this->repo->latest($limit);
+        return Cache::remember("berita_latest_{$limit}", now()->addMinutes(15), fn() => $this->repo->latest($limit));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Contracts\BannerRepositoryInterface;
 use App\Repositories\Contracts\ProfilSekolahRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class ProfilSekolahService
 {
@@ -14,11 +15,11 @@ class ProfilSekolahService
 
     public function getProfil()
     {
-        return $this->profilRepo->get();
+        return Cache::remember('profil_sekolah', now()->addHours(6), fn() => $this->profilRepo->get());
     }
 
     public function getBanner()
     {
-        return $this->bannerRepo->allAktif();
+        return Cache::remember('banner_aktif', now()->addHours(3), fn() => $this->bannerRepo->allAktif());
     }
 }

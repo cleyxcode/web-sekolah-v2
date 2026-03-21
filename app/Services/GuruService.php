@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\GuruRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class GuruService
 {
@@ -10,6 +11,6 @@ class GuruService
 
     public function getAll()
     {
-        return $this->repo->allAktif();
+        return Cache::remember('guru_aktif', now()->addHours(3), fn() => $this->repo->allAktif());
     }
 }
